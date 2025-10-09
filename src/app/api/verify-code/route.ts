@@ -1,11 +1,6 @@
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
-import { z } from "zod";
-import { verifySchema } from "@/schemas/verifySchema";
 
-const VerifyQuerySchema = z.object({
-    code: verifySchema
-})
 
 export async function POST(request: Request) {
     await dbConnect();
@@ -13,15 +8,6 @@ export async function POST(request: Request) {
     try {
         // Since in express we used request.body in the same way request.json() works.
         const { username, code } = await request.json();
-
-        // zod validation
-        const result = VerifyQuerySchema.safeParse(code);
-        if (!result.success) {
-            return Response.json({
-                success: false,
-                message: "Invalid query paramters"
-            }, { status: 400 });
-        }
 
         // Sometimes while sending the data through the url it does not gets encoded properly.
         // So we use decodeURIComponent() to decode the url from the frontend properly.
