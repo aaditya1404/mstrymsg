@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
 
-const page = () => {
+const Verify = () => {
 
     const router = useRouter();
     const params = useParams<{ username: string }>();
@@ -39,9 +39,8 @@ const page = () => {
             router.replace('/sign-in');
         } catch (error) {
             const axiosError = error as AxiosError<ApiResponse>;
-            let errorMessage = axiosError.response?.data.message;
             toast("Verification failed", {
-                description: errorMessage
+                description: axiosError.response?.data.message
             });
         }
     };
@@ -76,4 +75,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Verify
