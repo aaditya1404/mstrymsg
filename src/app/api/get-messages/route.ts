@@ -19,24 +19,25 @@ export async function GET(request: Request) {
 
     try {
         // Using mongodb aggregation pipeline
-        const user = await UserModel.aggregate([
-            { $match: { id: userId } },
-            { $unwind: "$messages" }, // converts the messages array message into object
-            { $sort: { 'messages.createdAt': -1 } }, // sorts it 
-            { $group: { _id: "$_id", messages: { $push: "$messages" } } }
-        ]);
+        const userAgg = await UserModel.aggregate([
+            { $match: { _id: userId } },
+            { $unwind: { path: '$messages', preserveNullAndEmptyArrays: true } },
+            // { $unwind: '$messages'},
+            { $sort: { 'messages.createdAt': -1 } },
+            { $group: { _id: '$_id', messages: { $push: '$messages' } } },
+        ]).exec();
 
-        if (!user || user.length === 0) {
+        if (!userAgg || userAgg.length === 0) {
             return Response.json({
                 success: false,
-                message: "User not found"
+                message: "User not found 23154353"
             }, { status: 401 });
         }
 
         return Response.json({
-            success: false,
-            messages: user[0].messages // we recive an array from mongodb aggregation pipeline
-        }, { status: 401 });
+            success: true,
+            messages: userAgg[0].messages // we recive an array from mongodb aggregation pipeline
+        }, { status: 200 });
     } catch (error) {
         console.log("An unexpected error has occured", error);
         return Response.json({
