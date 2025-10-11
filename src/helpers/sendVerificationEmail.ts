@@ -38,7 +38,7 @@ export async function sendVerificationEmail(
         // const emailHtml = await render(React.createElement(VerificationEmail, { username, otp: verifyCode }));
         // Send email using Nodemailer
         await transporter.sendMail({
-            from: `"Mstry Message" <${process.env.EMAIL_USER}>`, // sender address
+            from: `"Mystery Message" <${process.env.EMAIL_USER}>`, // sender address
             to: email,
             subject: "Verification Code",
             html: emailHtml,
